@@ -1,8 +1,9 @@
 package com.event.wear.platform.Rent.domain.service;
 
+import com.event.wear.platform.Rent.domain.exceptions.ResourceNotFoundException;
 import com.event.wear.platform.Rent.domain.model.entities.Product;
 import com.event.wear.platform.Rent.domain.model.valueobjects.ProductDescription;
-import com.event.wear.platform.Rent.domain.repository.ProductRepository;
+import com.event.wear.platform.Rent.infrastructure.persistence.jpa.repositories.ProductRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,14 +46,20 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    @PostConstruct
+    public Product selectProduct(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));
+    }
+
+
+    /*@PostConstruct
     public void init() {
         Product product = new Product();
-        product.setName("Test Product");
-        product.setDescription(new ProductDescription("Test Description"));
-        product.setRentalPrice(100.0);
+        product.setName("Test elgollo");
+        product.setDescription(new ProductDescription("Test Elgollyp"));
+        product.setRentalPrice(200.0);
 
         createProduct(product);
     }
-
+     */
 }
