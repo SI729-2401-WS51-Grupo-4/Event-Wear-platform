@@ -1,12 +1,10 @@
 package com.event.wear.platform.Rent.domain.model.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import com.event.wear.platform.Rent.domain.model.valueobjects.ProductDescription;
 
 @Entity
+@Table(name = "Product")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
