@@ -1,13 +1,15 @@
 package com.event.wear.platform;
 
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
 @EnableJpaAuditing
-public class Application {
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
+public class EventWearPlatformApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(EventWearPlatformApplication.class, args);
+	}
+
 }
