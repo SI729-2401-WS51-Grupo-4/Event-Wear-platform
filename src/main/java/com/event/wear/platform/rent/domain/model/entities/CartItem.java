@@ -1,43 +1,53 @@
-package com.event.wear.platform.rent.domain.model.entities;
+package com.event.wear.platform.Rent.domain.model.entities;
 
+import com.event.wear.platform.Rent.domain.model.aggregates.ShoppingCart;
+import com.event.wear.platform.Rent.domain.model.valueobjects.PublicationId;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Table(name = "CartItem")
+@Table(name = "cart_item")
 public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
+    @Getter
     @ManyToOne
     @JoinColumn(name = "shopping_cart_id")
     private ShoppingCart shoppingCart;
 
+    @Setter
+    @Getter
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "rental_id")
+    private ShoppingCart rental;
 
-    public Long getId() {
+    @Setter
+    @Getter
+    @Embedded
+    private PublicationId publicationId;
+
+    @Setter
+    @Getter
+    private int quantity;
+
+    public CartItem() {
+        // Constructor without arguments
+    }
+
+    public CartItem(ShoppingCart shoppingCart, PublicationId publicationId, int quantity) {
+        this.shoppingCart = shoppingCart;
+        this.publicationId = publicationId;
+        this.quantity = quantity;
+    }
+
+    public Object getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    // Getters y setters
 
-    public ShoppingCart getShoppingCart() {
-        return shoppingCart;
-    }
-
-    public void setShoppingCart(ShoppingCart shoppingCart) {
-        this.shoppingCart = shoppingCart;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
 }
