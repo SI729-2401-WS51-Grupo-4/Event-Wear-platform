@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<c:project xmlns:c="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<c:modelVersion>4.0.0</c:modelVersion>
+	<c:parent>
+		<c:groupId>org.springframework.boot</c:groupId>
+		<c:artifactId>spring-boot-starter-parent</c:artifactId>
+		<c:version>3.3.0</c:version>
+		<c:relativePath/> <!-- lookup parent from repository -->
+	</c:parent>
+	<c:groupId>com</c:groupId>
+	<c:artifactId>event-wear-platform</c:artifactId>
+	<c:version>0.0.1-SNAPSHOT</c:version>
+	<c:name>event-wear-platform</c:name>
+	<c:description>categories event wear</c:description>
+	<c:properties>
+		<c:java.version>21</c:java.version>
+	</c:properties>
+	<c:dependencies>
+		<c:dependency>
+			<c:groupId>org.springframework.boot</c:groupId>
+			<c:artifactId>spring-boot-starter-data-jpa</c:artifactId>
+		</c:dependency>
+		<c:dependency>
+			<c:groupId>org.springframework.boot</c:groupId>
+			<c:artifactId>spring-boot-starter-web</c:artifactId>
+		</c:dependency>
+
+		<c:dependency>
+			<c:groupId>org.springframework.boot</c:groupId>
+			<c:artifactId>spring-boot-devtools</c:artifactId>
+			<c:scope>runtime</c:scope>
+			<c:optional>true</c:optional>
+		</c:dependency>
+		<c:dependency>
+			<c:groupId>org.projectlombok</c:groupId>
+			<c:artifactId>lombok</c:artifactId>
+			<c:optional>true</c:optional>
+			<c:scope>provided</c:scope>
+		</c:dependency>
+		<c:dependency>
+			<c:groupId>org.postgresql</c:groupId>
+			<c:artifactId>postgresql</c:artifactId>
+			<c:scope>runtime</c:scope>
+		</c:dependency>
+		<c:dependency>
+			<c:groupId>org.springframework.boot</c:groupId>
+			<c:artifactId>spring-boot-starter-test</c:artifactId>
+			<c:scope>test</c:scope>
+		</c:dependency>
+		<c:dependency>
+			<c:groupId>org.projectlombok</c:groupId>
+			<c:artifactId>lombok</c:artifactId>
+			<c:version>1.18.32</c:version>
+		</c:dependency>
+	</c:dependencies>
+
+	<c:build>
+		<c:plugins>
+			<c:plugin>
+				<c:groupId>org.springframework.boot</c:groupId>
+				<c:artifactId>spring-boot-maven-plugin</c:artifactId>
+			</c:plugin>
+		</c:plugins>
+	</c:build>
+
+</c:project>
