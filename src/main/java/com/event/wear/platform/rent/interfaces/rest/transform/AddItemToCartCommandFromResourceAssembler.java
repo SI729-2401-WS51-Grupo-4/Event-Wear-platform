@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AddItemToCartCommandFromResourceAssembler {
 
-   public AddItemToCartCommand toCommand(UserId userId, ShoppingCart shoppingCart, AddItemToCartResource resource) {
+   public AddItemToCartCommand toCommandFromResource(UserId userId, ShoppingCart shoppingCart, AddItemToCartResource resource) {
     return new AddItemToCartCommand(userId, shoppingCart, resource.publicationId(), resource.quantity());
    }
 }

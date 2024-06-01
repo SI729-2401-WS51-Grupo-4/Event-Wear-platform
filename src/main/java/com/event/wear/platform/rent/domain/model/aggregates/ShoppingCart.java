@@ -18,7 +18,7 @@ public class ShoppingCart extends AbstractAggregateRoot<ShoppingCart> {
     private UserId userId;
 
     @Getter
-    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<CartItem> items = new ArrayList<>(); // Initialize the list
 
     public ShoppingCart() {

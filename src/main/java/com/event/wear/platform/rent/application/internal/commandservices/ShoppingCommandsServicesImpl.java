@@ -19,19 +19,8 @@ public class ShoppingCommandsServicesImpl implements RentCommandService {
     }
 
 
-   @Override
-    @Transactional
-    public void handle(DeleteCartItemCommand command) {
-    UserId userId = new UserId(command.cartItemId());
-    ShoppingCart shoppingCart = shoppingCartRepository.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("ShoppingCart not found"));
-    shoppingCart.getItems().removeIf(item -> item.getId().equals(command.cartItemId()));
-    shoppingCartRepository.save(shoppingCart);
-    }
-
-
-@Override
-public Long handle(AddItemToCartCommand command) {
+    @Override
+    public Long handle(AddItemToCartCommand command) {
     UserId userId = command.userId();
     ShoppingCart shoppingCart = shoppingCartRepository.findById(userId)
             .orElseGet(() -> {
@@ -47,12 +36,31 @@ public Long handle(AddItemToCartCommand command) {
     shoppingCartRepository.save(shoppingCart);
 
     return (Long) newItem.getId();
-}
+    }
+
+@Override
+@Transactional
+public void handle(DeleteCartItemCommand command) {
+    UserId userId = command.userId();
+    ShoppingCart shoppingCart = shoppingCartRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("ShoppingCart not found"));
+
+    if (shoppingCart.getItems().isEmpty()) {
+        throw new IllegalArgumentException("This user has no items in the shopping cart");
+    }
+
+    boolean itemExists = shoppingCart.getItems().removeIf(item -> item.getId().equals(command.cartItemId()));
+    if (!itemExists) {
+        throw new IllegalArgumentException("CartItem does not exist");
+    }
+
+    shoppingCartRepository.save(shoppingCart);
+    }
 
 
     @Override
-@Transactional
-public void handle(UpdateCartItemCommand command) {
+    @Transactional
+    public void handle(UpdateCartItemCommand command) {
     UserId userId = new UserId(command.shoppingCartId());
     ShoppingCart shoppingCart = shoppingCartRepository.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("ShoppingCart not found"));
@@ -62,5 +70,5 @@ public void handle(UpdateCartItemCommand command) {
             .orElseThrow(() -> new IllegalArgumentException("CartItem not found"));
     itemToUpdate.setQuantity(command.newQuantity());
     shoppingCartRepository.save(shoppingCart);
-}
+    }
 }
