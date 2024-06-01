@@ -3,6 +3,7 @@ package com.event.wear.platform.rent.interfaces.rest;
 import com.event.wear.platform.rent.domain.model.aggregates.ShoppingCart;
 import com.event.wear.platform.rent.domain.model.commands.AddItemToCartCommand;
 import com.event.wear.platform.rent.domain.model.commands.DeleteCartItemCommand;
+import com.event.wear.platform.rent.domain.model.commands.UpdateCartItemCommand;
 import com.event.wear.platform.rent.domain.model.queries.GetUserShoppingCartQuery;
 import com.event.wear.platform.rent.domain.model.valueobjects.UserId;
 import com.event.wear.platform.rent.domain.services.RentCommandService;
@@ -10,8 +11,10 @@ import com.event.wear.platform.rent.domain.services.RentQueryService;
 import com.event.wear.platform.rent.infrastructure.persistence.jpa.repositories.ShoppingCartRepository;
 import com.event.wear.platform.rent.interfaces.rest.resources.AddItemToCartResource;
 import com.event.wear.platform.rent.interfaces.rest.resources.DeleteCartItemResource;
+import com.event.wear.platform.rent.interfaces.rest.resources.UpdateCartItemResource;
 import com.event.wear.platform.rent.interfaces.rest.transform.AddItemToCartCommandFromResourceAssembler;
 import com.event.wear.platform.rent.interfaces.rest.transform.DeleteCartItemCommandFromResourceAssembler;
+import com.event.wear.platform.rent.interfaces.rest.transform.UpdateCartItemCommandFromResourceAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,12 +26,14 @@ public class ShoppingCartController {
     private final RentQueryService queryService;
     private final AddItemToCartCommandFromResourceAssembler addItemAssembler;
     private final DeleteCartItemCommandFromResourceAssembler deleteItemAssembler;
+    private final UpdateCartItemCommandFromResourceAssembler updateItemAssembler;
 
-    public ShoppingCartController(RentCommandService commandService, RentQueryService queryService, AddItemToCartCommandFromResourceAssembler addItemAssembler, DeleteCartItemCommandFromResourceAssembler deleteItemAssembler, ShoppingCartRepository shoppingCartRepository) {
+    public ShoppingCartController(RentCommandService commandService, RentQueryService queryService, AddItemToCartCommandFromResourceAssembler addItemAssembler, DeleteCartItemCommandFromResourceAssembler deleteItemAssembler, ShoppingCartRepository shoppingCartRepository, UpdateCartItemCommandFromResourceAssembler updateItemAssembler) {
         this.commandService = commandService;
         this.queryService = queryService;
         this.addItemAssembler = addItemAssembler;
         this.deleteItemAssembler = deleteItemAssembler;
+        this.updateItemAssembler = updateItemAssembler;
     }
 
     /*http://localhost:8090/cart/add*/
@@ -71,5 +76,12 @@ public class ShoppingCartController {
         return ResponseEntity.ok().build();
     }
 
+    /*http://localhost:8090/cart/update*/
+    @PutMapping("/update")
+    public ResponseEntity<Void> updateCartItem(@RequestBody UpdateCartItemResource resource) {
+        UpdateCartItemCommand command = updateItemAssembler.toCommandFromResource(resource);
+        commandService.handle(command);
+        return ResponseEntity.ok().build();
+    }
 
 }

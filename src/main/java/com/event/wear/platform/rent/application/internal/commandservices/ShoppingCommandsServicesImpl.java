@@ -58,10 +58,10 @@ public void handle(DeleteCartItemCommand command) {
     }
 
 
-    @Override
+   @Override
     @Transactional
     public void handle(UpdateCartItemCommand command) {
-    UserId userId = new UserId(command.shoppingCartId());
+    UserId userId = command.userId();
     ShoppingCart shoppingCart = shoppingCartRepository.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("ShoppingCart not found"));
     CartItem itemToUpdate = shoppingCart.getItems().stream()

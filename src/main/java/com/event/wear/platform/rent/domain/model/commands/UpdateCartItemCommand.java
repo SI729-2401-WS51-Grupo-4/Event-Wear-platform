@@ -1,4 +1,6 @@
 package com.event.wear.platform.rent.domain.model.commands;
 
-public record UpdateCartItemCommand(Long shoppingCartId, Long cartItemId, int newQuantity) {
+import com.event.wear.platform.rent.domain.model.valueobjects.UserId;
+
+public record UpdateCartItemCommand(UserId userId, Long cartItemId, int newQuantity) {
 }
