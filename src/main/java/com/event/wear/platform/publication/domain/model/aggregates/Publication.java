@@ -9,12 +9,16 @@ import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.AbstractAggregateRoot;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import java.security.SecureRandom;
+
 
 import java.util.Date;
 import java.util.List;
 
 @Getter
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Publication extends AbstractAggregateRoot<Publication> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,15 +32,17 @@ public class Publication extends AbstractAggregateRoot<Publication> {
     private LessorId lessorId;
 
     @CreatedDate
+    @Column(nullable = false, updatable = false)
     private Date createdAt;
 
     @LastModifiedDate
+    @Column(nullable = false)
     private Date updatedAt;
 
-    @OneToOne(mappedBy = "publication")
+    @OneToOne(mappedBy = "publication", cascade = CascadeType.ALL)
     private Garment garment;
 
-    @OneToMany(mappedBy = "publication", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "publication", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Comment> comments;
 
     @Embedded
@@ -48,11 +54,12 @@ public class Publication extends AbstractAggregateRoot<Publication> {
         this.commentManager = new CommentManager();
     }
 
-    public Publication(Integer cost, LessorId lessorId, Garment garment, List<Comment> comments) {
+    public Publication(Integer cost, LessorId lessorId, Garment garment) {
+        this.id = new SecureRandom().nextLong();
         this.cost = cost;
         this.lessorId = lessorId;
         this.garment = garment;
-        this.comments = comments;
+        this.garment.setPublication(this);
         this.commentManager = new CommentManager();
     }
 

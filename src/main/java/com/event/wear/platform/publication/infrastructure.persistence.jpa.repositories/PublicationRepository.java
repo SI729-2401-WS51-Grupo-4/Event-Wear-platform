@@ -12,5 +12,5 @@ import java.util.Optional;
 @Repository
 public interface PublicationRepository extends JpaRepository<Publication, Long> {
     Boolean existsByGarment(Garment garment);
-    List<Publication> findByLessorId(LessorId lessorId);
+    List<Publication> findByLessorId(Long lessorId);
 }

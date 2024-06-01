@@ -23,7 +23,7 @@ public class Garment extends AuditableModel {
         this.description = "";
         this.size = "";
     }
-    public Garment(String title, String description, String size, String rentalCount) {
+    public Garment(String title, String description, String size) {
         this.title = title;
         this.description = description;
         this.size = size;
@@ -32,4 +32,20 @@ public class Garment extends AuditableModel {
     @OneToOne
     @JoinColumn(name = "publication_id")
     private Publication publication;
+
+    public void setPublication(Publication publication) {
+        this.publication = publication;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
 }

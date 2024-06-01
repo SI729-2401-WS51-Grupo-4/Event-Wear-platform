@@ -2,6 +2,8 @@ package com.event.wear.platform.publication.application.internal.commandservices
 
 import com.event.wear.platform.publication.domain.model.aggregates.Publication;
 import com.event.wear.platform.publication.domain.model.commands.*;
+import com.event.wear.platform.publication.domain.model.entities.Comment;
+import com.event.wear.platform.publication.domain.model.entities.Garment;
 import com.event.wear.platform.publication.domain.services.PublicationCommandService;
 import com.event.wear.platform.publication.infrastructure.persistence.jpa.repositories.PublicationRepository;
 import org.springframework.stereotype.Service;
@@ -15,13 +17,14 @@ public class PublicationCommandServiceImpl implements PublicationCommandService 
         this.publicationRepository = publicationRepository;
     }
     @Override
-    public Long handle(CreatePublicationCommand command) {
+    public Publication handle(CreatePublicationCommand command) {
         if (publicationRepository.existsByGarment(command.garment())) {
             throw new IllegalArgumentException("Publication already exists");
         }
-        var publication = new Publication(command.cost(), command.lessorId(), command.garment(), command.comments());
+        var garment = new Garment(command.garment().getTitle(), command.garment().getDescription(), command.garment().getSize());
+        var publication = new Publication(command.cost(), command.lessorId(), garment);
         publicationRepository.save(publication);
-        return publication.getId();
+        return publication;
     }
     @Override
     public Optional<Publication> handle(UpdatePublicationCommand command){
@@ -31,7 +34,10 @@ public class PublicationCommandServiceImpl implements PublicationCommandService 
         var publication = publicationRepository.findById(command.publicationId()).get();
         publication.updateCost(command.cost());
         publication.updateLessorId(command.lessorId());
-        publication.updateGarment(command.garment());
+        var garment = publication.getGarment();
+        garment.setTitle(command.garment().getTitle());
+        garment.setDescription(command.garment().getDescription());
+        garment.setSize(command.garment().getSize());
         publicationRepository.save(publication);
         return Optional.of(publication);
     }
@@ -43,13 +49,15 @@ public class PublicationCommandServiceImpl implements PublicationCommandService 
         publicationRepository.deleteById(command.publicationId());
     }
     @Override
-    public void handle(AddCommentToPublicationCommand command){
+    public Publication handle(AddCommentToPublicationCommand command){
         if (!publicationRepository.existsById(command.publicationId())) {
             throw new IllegalArgumentException("Publication does not exist");
         }
         var publication = publicationRepository.findById(command.publicationId()).get();
-        publication.addComment(command.comment());
+        var comment = publication.getComments();
+        comment.add(new Comment(publication, command.content(), command.rating()));
         publicationRepository.save(publication);
+        return publication;
     }
     @Override
     public void handle(AssignLessorToPublicationCommand command){
@@ -58,15 +66,6 @@ public class PublicationCommandServiceImpl implements PublicationCommandService 
         }
         var publication = publicationRepository.findById(command.publicationId()).get();
         publication.updateLessorId(command.lessorId());
-        publicationRepository.save(publication);
-    }
-    @Override
-    public void handle(AddGarmentToPublication command){
-        if (!publicationRepository.existsById(command.publicationId())) {
-            throw new IllegalArgumentException("Publication does not exist");
-        }
-        var publication = publicationRepository.findById(command.publicationId()).get();
-        publication.updateGarment(command.garment());
         publicationRepository.save(publication);
     }
 }

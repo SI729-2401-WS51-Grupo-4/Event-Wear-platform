@@ -6,5 +6,5 @@ import com.event.wear.platform.publication.domain.model.valueobjects.LessorId;
 
 import java.util.List;
 
-public record CreatePublicationCommand (Integer cost, LessorId lessorId, Garment garment, List<Comment> comments){
+public record CreatePublicationCommand (Integer cost, LessorId lessorId, Garment garment){
 }
