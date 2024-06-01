@@ -1,6 +1,6 @@
-package com.event.wear.platform.Rent.domain.services;
+package com.event.wear.platform.rent.domain.services;
 
-import com.event.wear.platform.Rent.domain.model.commands.*;
+import com.event.wear.platform.rent.domain.model.commands.*;
 
 public interface RentCommandService {
     void handle(DeleteCartItemCommand command);

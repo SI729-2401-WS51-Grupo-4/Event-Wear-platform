@@ -1,7 +1,7 @@
-package com.event.wear.platform.Rent.domain.model.aggregates;
+package com.event.wear.platform.rent.domain.model.aggregates;
 
-import com.event.wear.platform.Rent.domain.model.entities.CartItem;
-import com.event.wear.platform.Rent.domain.model.valueobjects.UserId;
+import com.event.wear.platform.rent.domain.model.entities.CartItem;
+import com.event.wear.platform.rent.domain.model.valueobjects.UserId;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

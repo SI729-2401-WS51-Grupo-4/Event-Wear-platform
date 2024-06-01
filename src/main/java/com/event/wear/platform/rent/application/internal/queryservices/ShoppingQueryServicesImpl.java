@@ -1,10 +1,10 @@
-package com.event.wear.platform.Rent.application.internal.queryservices;
+package com.event.wear.platform.rent.application.internal.queryservices;
 
-import com.event.wear.platform.Rent.domain.model.aggregates.ShoppingCart;
-import com.event.wear.platform.Rent.domain.model.entities.CartItem;
-import com.event.wear.platform.Rent.domain.model.queries.*;
-import com.event.wear.platform.Rent.domain.services.RentQueryService;
-import com.event.wear.platform.Rent.infrastructure.persistence.jpa.repositories.ShoppingCartRepository;
+import com.event.wear.platform.rent.domain.model.aggregates.ShoppingCart;
+import com.event.wear.platform.rent.domain.model.entities.CartItem;
+import com.event.wear.platform.rent.domain.model.queries.*;
+import com.event.wear.platform.rent.domain.services.RentQueryService;
+import com.event.wear.platform.rent.infrastructure.persistence.jpa.repositories.ShoppingCartRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

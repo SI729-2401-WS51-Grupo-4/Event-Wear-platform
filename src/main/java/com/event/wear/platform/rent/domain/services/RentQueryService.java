@@ -1,8 +1,8 @@
-package com.event.wear.platform.Rent.domain.services;
+package com.event.wear.platform.rent.domain.services;
 
-import com.event.wear.platform.Rent.domain.model.aggregates.ShoppingCart;
-import com.event.wear.platform.Rent.domain.model.entities.CartItem;
-import com.event.wear.platform.Rent.domain.model.queries.*;
+import com.event.wear.platform.rent.domain.model.aggregates.ShoppingCart;
+import com.event.wear.platform.rent.domain.model.entities.CartItem;
+import com.event.wear.platform.rent.domain.model.queries.*;
 
 import java.util.List;
 import java.util.Optional;
