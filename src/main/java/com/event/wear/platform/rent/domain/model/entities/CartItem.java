@@ -2,6 +2,7 @@ package com.event.wear.platform.rent.domain.model.entities;
 
 import com.event.wear.platform.rent.domain.model.aggregates.ShoppingCart;
 import com.event.wear.platform.rent.domain.model.valueobjects.PublicationId;
+import com.event.wear.platform.rent.domain.model.valueobjects.UserId;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,15 +16,14 @@ public class CartItem {
 
     @Setter
     @Getter
+    @Embedded
+    private UserId userId;
+
+    @Getter
+    @Setter
     @ManyToOne
     @JoinColumn(name = "shopping_cart_id")
     private ShoppingCart shoppingCart;
-
-    @Setter
-    @Getter
-    @ManyToOne
-    @JoinColumn(name = "rental_id")
-    private ShoppingCart rental;
 
     @Setter
     @Getter
@@ -35,11 +35,11 @@ public class CartItem {
     private int quantity;
 
     public CartItem() {
-        // Constructor without arguments
+
     }
 
-    public CartItem(ShoppingCart shoppingCart, PublicationId publicationId, int quantity) {
-        this.shoppingCart = shoppingCart;
+    public CartItem(UserId userId, PublicationId publicationId, int quantity) {
+        this.userId = userId;
         this.publicationId = publicationId;
         this.quantity = quantity;
     }
@@ -47,7 +47,5 @@ public class CartItem {
     public Object getId() {
         return id;
     }
-
-    // Getters y setters
 
 }
