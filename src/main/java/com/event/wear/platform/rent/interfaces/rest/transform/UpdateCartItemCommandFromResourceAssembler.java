@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UpdateCartItemCommandFromResourceAssembler {
-
     public UpdateCartItemCommand toCommandFromResource(UpdateCartItemResource resource) {
         return new UpdateCartItemCommand(resource.userId(), resource.cartItemId(), resource.newQuantity());
     }
+
 }

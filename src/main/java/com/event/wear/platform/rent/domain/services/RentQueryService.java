@@ -1,15 +1,22 @@
 package com.event.wear.platform.rent.domain.services;
 
 import com.event.wear.platform.rent.domain.model.aggregates.ShoppingCart;
-import com.event.wear.platform.rent.domain.model.entities.CartItem;
-import com.event.wear.platform.rent.domain.model.queries.*;
+import com.event.wear.platform.rent.domain.model.queries.GetAllCartItemsByUserIdQuery;
+import com.event.wear.platform.rent.domain.model.queries.GetShoppingCartIdByUserIdQuery;
+import com.event.wear.platform.rent.domain.model.queries.GetUserShoppingCartQuery;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface RentQueryService {
-    Optional<ShoppingCart> handle(GetUserShoppingCartQuery query);
-    List<CartItem> handle(GetAllCartItemsQuery query);
-    Optional<List<CartItem>> handle(GetCartItemsByUserIdQuery query);
 
+
+    Optional<ShoppingCart> handle(GetUserShoppingCartQuery query);
+
+
+    List<Map<String, Object>> handle(GetAllCartItemsByUserIdQuery query);
+
+
+    List<Map<String, Object>> handle(GetShoppingCartIdByUserIdQuery query);
 }

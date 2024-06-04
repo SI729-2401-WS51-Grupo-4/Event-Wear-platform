@@ -1,9 +1,10 @@
 package com.event.wear.platform.rent.application.internal.commandservices;
 
+import com.event.wear.platform.rent.domain.model.valueobjects.PublicationId;
+import com.event.wear.platform.rent.domain.model.valueobjects.UserId;
 import com.event.wear.platform.rent.domain.model.aggregates.ShoppingCart;
 import com.event.wear.platform.rent.domain.model.commands.*;
 import com.event.wear.platform.rent.domain.model.entities.CartItem;
-import com.event.wear.platform.rent.domain.model.valueobjects.UserId;
 import com.event.wear.platform.rent.domain.services.RentCommandService;
 import com.event.wear.platform.rent.infrastructure.persistence.jpa.repositories.ShoppingCartRepository;
 import org.springframework.stereotype.Service;
@@ -20,55 +21,49 @@ public class ShoppingCommandsServicesImpl implements RentCommandService {
 
 
     @Override
-    public Long handle(AddItemToCartCommand command) {
-    UserId userId = command.userId();
-    ShoppingCart shoppingCart = shoppingCartRepository.findById(userId)
-            .orElseGet(() -> {
-                ShoppingCart newCart = new ShoppingCart();
-                newCart.setUserId(userId);
-                return newCart;
-            });
-    CartItem newItem = new CartItem(userId, command.publicationId(), command.quantity());
-
-    shoppingCart.addItem(newItem);
-
-    // Save the ShoppingCart with the new CartItem
-    shoppingCartRepository.save(shoppingCart);
-
-    return (Long) newItem.getId();
+    public void handle(AddItemToCartCommand command) {
+        Long userId = command.userId();
+        ShoppingCart shoppingCart = shoppingCartRepository.findById(userId)
+                .orElseGet(() -> {
+                    ShoppingCart newCart = new ShoppingCart();
+                    newCart.setUserId(userId);
+                    return newCart;
+                });
+        UserId userIdInstance = new UserId(userId);
+        PublicationId publicationIdInstance = new PublicationId(command.publicationId());
+        int quantity = command.getQuantity();
+    CartItem newItem = new CartItem(userIdInstance, publicationIdInstance, quantity);
+        shoppingCart.addItem(newItem);
+        shoppingCartRepository.save(shoppingCart);
+        newItem.getId();
     }
 
-@Override
-@Transactional
-public void handle(DeleteCartItemCommand command) {
-    UserId userId = command.userId();
+    @Override
+    @Transactional
+    public void handle(DeleteCartItemCommand command) {
+    Long userId = command.userId();
     ShoppingCart shoppingCart = shoppingCartRepository.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("ShoppingCart not found"));
-
-    if (shoppingCart.getItems().isEmpty()) {
-        throw new IllegalArgumentException("This user has no items in the shopping cart");
-    }
-
-    boolean itemExists = shoppingCart.getItems().removeIf(item -> item.getId().equals(command.cartItemId()));
-    if (!itemExists) {
-        throw new IllegalArgumentException("CartItem does not exist");
-    }
-
+    CartItem itemToRemove = shoppingCart.getItems().stream()
+            .filter(item -> item.getId().equals(command.cartItemId()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("CartItem not found"));
+    shoppingCart.removeItem(itemToRemove);
     shoppingCartRepository.save(shoppingCart);
     }
 
-
-   @Override
+    @Override
     @Transactional
     public void handle(UpdateCartItemCommand command) {
-    UserId userId = command.userId();
+    Long userId = command.userId();
     ShoppingCart shoppingCart = shoppingCartRepository.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("ShoppingCart not found"));
     CartItem itemToUpdate = shoppingCart.getItems().stream()
             .filter(item -> item.getId().equals(command.cartItemId()))
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException("CartItem not found"));
-    itemToUpdate.setQuantity(command.newQuantity());
+    shoppingCart.updateItemQuantity(itemToUpdate, command.newQuantity());
     shoppingCartRepository.save(shoppingCart);
     }
+
 }

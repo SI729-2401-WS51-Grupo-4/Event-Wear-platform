@@ -4,7 +4,8 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 public record PublicationId(Long publicationId) {
-    public PublicationId(Integer publicationId) {
-        this(publicationId.longValue());
+
+    public Long value() {
+        return publicationId;
     }
 }

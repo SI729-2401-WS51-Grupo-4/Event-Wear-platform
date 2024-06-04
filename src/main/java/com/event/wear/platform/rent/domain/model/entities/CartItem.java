@@ -3,6 +3,8 @@ package com.event.wear.platform.rent.domain.model.entities;
 import com.event.wear.platform.rent.domain.model.aggregates.ShoppingCart;
 import com.event.wear.platform.rent.domain.model.valueobjects.PublicationId;
 import com.event.wear.platform.rent.domain.model.valueobjects.UserId;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

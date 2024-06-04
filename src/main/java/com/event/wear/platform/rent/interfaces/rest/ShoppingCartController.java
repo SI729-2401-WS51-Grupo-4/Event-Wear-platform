@@ -4,11 +4,12 @@ import com.event.wear.platform.rent.domain.model.aggregates.ShoppingCart;
 import com.event.wear.platform.rent.domain.model.commands.AddItemToCartCommand;
 import com.event.wear.platform.rent.domain.model.commands.DeleteCartItemCommand;
 import com.event.wear.platform.rent.domain.model.commands.UpdateCartItemCommand;
+import com.event.wear.platform.rent.domain.model.queries.GetAllCartItemsByUserIdQuery;
+import com.event.wear.platform.rent.domain.model.queries.GetShoppingCartIdByUserIdQuery;
 import com.event.wear.platform.rent.domain.model.queries.GetUserShoppingCartQuery;
 import com.event.wear.platform.rent.domain.model.valueobjects.UserId;
 import com.event.wear.platform.rent.domain.services.RentCommandService;
 import com.event.wear.platform.rent.domain.services.RentQueryService;
-import com.event.wear.platform.rent.infrastructure.persistence.jpa.repositories.ShoppingCartRepository;
 import com.event.wear.platform.rent.interfaces.rest.resources.AddItemToCartResource;
 import com.event.wear.platform.rent.interfaces.rest.resources.DeleteCartItemResource;
 import com.event.wear.platform.rent.interfaces.rest.resources.UpdateCartItemResource;
@@ -17,6 +18,10 @@ import com.event.wear.platform.rent.interfaces.rest.transform.DeleteCartItemComm
 import com.event.wear.platform.rent.interfaces.rest.transform.UpdateCartItemCommandFromResourceAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/cart")
@@ -28,7 +33,7 @@ public class ShoppingCartController {
     private final DeleteCartItemCommandFromResourceAssembler deleteItemAssembler;
     private final UpdateCartItemCommandFromResourceAssembler updateItemAssembler;
 
-    public ShoppingCartController(RentCommandService commandService, RentQueryService queryService, AddItemToCartCommandFromResourceAssembler addItemAssembler, DeleteCartItemCommandFromResourceAssembler deleteItemAssembler, ShoppingCartRepository shoppingCartRepository, UpdateCartItemCommandFromResourceAssembler updateItemAssembler) {
+    public ShoppingCartController(RentCommandService commandService, RentQueryService queryService, AddItemToCartCommandFromResourceAssembler addItemAssembler, DeleteCartItemCommandFromResourceAssembler deleteItemAssembler, UpdateCartItemCommandFromResourceAssembler updateItemAssembler) {
         this.commandService = commandService;
         this.queryService = queryService;
         this.addItemAssembler = addItemAssembler;
@@ -36,52 +41,61 @@ public class ShoppingCartController {
         this.updateItemAssembler = updateItemAssembler;
     }
 
-    /*http://localhost:8090/cart/add*/
+
     @PostMapping("/add")
     public ResponseEntity<Void> addItemToCart(@RequestBody AddItemToCartResource resource) {
-        UserId userIdObj = resource.userId();
-        var userShoppingCart = queryService.handle(new GetUserShoppingCartQuery(userIdObj.value()));
+        Long userId = resource.userId();
+        UserId userIdInstance = new UserId(userId);
+        var userShoppingCart = queryService.handle(new GetUserShoppingCartQuery(userIdInstance.value()));
 
         ShoppingCart shoppingCart;
         if (userShoppingCart.isEmpty()) {
             shoppingCart = new ShoppingCart();
-            shoppingCart.setUserId(userIdObj);
+            shoppingCart.setUserId(userId);
         } else {
             shoppingCart = userShoppingCart.get();
         }
 
-        // Verificar si el artículo ya existe en el carrito
         var existingItem = shoppingCart.getItems().stream()
-                .filter(item -> item.getPublicationId().equals(resource.publicationId()))
+                .filter(item -> item.getPublicationId().equals(resource.getPublicationId()))
                 .findFirst();
 
         if (existingItem.isPresent()) {
-            // Si el artículo ya existe, actualizar la cantidad
-            existingItem.get().setQuantity(existingItem.get().getQuantity() + resource.quantity());
+            existingItem.get().setQuantity((int) (existingItem.get().getQuantity() + resource.quantity()));
         } else {
-            // Si el artículo no existe, crear uno nuevo
-            AddItemToCartCommand command = addItemAssembler.toCommandFromResource(userIdObj, shoppingCart, resource);
+            AddItemToCartCommand command = addItemAssembler.toCommandFromResource(resource);
             commandService.handle(command);
         }
 
         return ResponseEntity.ok().build();
     }
 
-    /*http://localhost:8090/cart/delete/{userId}/{cartItemId}*/
     @DeleteMapping("/delete/{userId}/{cartItemId}")
     public ResponseEntity<Void> deleteCartItem(@PathVariable Long userId, @PathVariable Long cartItemId) {
-        DeleteCartItemResource resource = new DeleteCartItemResource(new UserId(userId), cartItemId);
+        DeleteCartItemResource resource = new DeleteCartItemResource(userId, cartItemId);
         DeleteCartItemCommand command = deleteItemAssembler.toCommandFromResource(resource);
         commandService.handle(command);
         return ResponseEntity.ok().build();
     }
 
-    /*http://localhost:8090/cart/update*/
     @PutMapping("/update")
     public ResponseEntity<Void> updateCartItem(@RequestBody UpdateCartItemResource resource) {
         UpdateCartItemCommand command = updateItemAssembler.toCommandFromResource(resource);
         commandService.handle(command);
         return ResponseEntity.ok().build();
     }
+
+      @GetMapping("/items/{userId}")
+    public ResponseEntity<List<Map<String, Object>>> getAllCartItemsByUserId(@PathVariable Long userId) {
+    List<Map<String, Object>> items = queryService.handle(new GetAllCartItemsByUserIdQuery(userId));
+    return ResponseEntity.ok(items);
+    }
+
+    @GetMapping("/id/{userId}")
+    public ResponseEntity<List<Map<String, Object>>> getShoppingCartIdByUserId(@PathVariable Long userId) {
+    List<Map<String, Object>> shoppingCartId = queryService.handle(new GetShoppingCartIdByUserIdQuery(userId));
+    return ResponseEntity.ok(shoppingCartId);
+    }
+
 
 }
