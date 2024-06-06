@@ -29,10 +29,6 @@ public class ShoppingCart extends AbstractAggregateRoot<ShoppingCart> {
     public ShoppingCart() {
     }
 
-    public ShoppingCart(Long userId) {
-        this.userId = userId;
-    }
-
     public void addItem(CartItem item) {
         items.add(item);
         item.setShoppingCart(this);

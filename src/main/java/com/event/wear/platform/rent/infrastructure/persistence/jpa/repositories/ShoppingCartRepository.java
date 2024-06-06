@@ -1,8 +1,5 @@
 package com.event.wear.platform.rent.infrastructure.persistence.jpa.repositories;
-
 import com.event.wear.platform.rent.domain.model.aggregates.ShoppingCart;
-import com.event.wear.platform.rent.domain.model.valueobjects.UserId;
-import org.apache.catalina.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

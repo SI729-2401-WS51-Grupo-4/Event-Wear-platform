@@ -21,7 +21,7 @@ public class ShoppingCommandsServicesImpl implements RentCommandService {
 
 
     @Override
-    public void handle(AddItemToCartCommand command) {
+    public void handle(AddCartItemCommand command) {
         Long userId = command.userId();
         ShoppingCart shoppingCart = shoppingCartRepository.findById(userId)
                 .orElseGet(() -> {

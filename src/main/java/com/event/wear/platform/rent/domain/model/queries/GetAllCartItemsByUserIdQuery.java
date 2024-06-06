@@ -6,8 +6,4 @@ public record GetAllCartItemsByUserIdQuery(Long userId) {
             throw new IllegalArgumentException("User id cannot be negative");
         }
     }
-
-    public GetAllCartItemsByUserIdQuery() {
-        this(0L);
-    }
 }

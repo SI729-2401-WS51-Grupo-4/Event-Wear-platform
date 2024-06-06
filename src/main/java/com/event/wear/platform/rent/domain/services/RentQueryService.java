@@ -10,13 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface RentQueryService {
-
-
     Optional<ShoppingCart> handle(GetUserShoppingCartQuery query);
-
-
     List<Map<String, Object>> handle(GetAllCartItemsByUserIdQuery query);
-
-
     List<Map<String, Object>> handle(GetShoppingCartIdByUserIdQuery query);
 }

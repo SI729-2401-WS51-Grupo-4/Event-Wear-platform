@@ -1,7 +1,7 @@
 package com.event.wear.platform.rent.interfaces.rest;
 
 import com.event.wear.platform.rent.domain.model.aggregates.ShoppingCart;
-import com.event.wear.platform.rent.domain.model.commands.AddItemToCartCommand;
+import com.event.wear.platform.rent.domain.model.commands.AddCartItemCommand;
 import com.event.wear.platform.rent.domain.model.commands.DeleteCartItemCommand;
 import com.event.wear.platform.rent.domain.model.commands.UpdateCartItemCommand;
 import com.event.wear.platform.rent.domain.model.queries.GetAllCartItemsByUserIdQuery;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/cart")
@@ -63,7 +62,7 @@ public class ShoppingCartController {
         if (existingItem.isPresent()) {
             existingItem.get().setQuantity((int) (existingItem.get().getQuantity() + resource.quantity()));
         } else {
-            AddItemToCartCommand command = addItemAssembler.toCommandFromResource(resource);
+            AddCartItemCommand command = addItemAssembler.toCommandFromResource(resource);
             commandService.handle(command);
         }
 
