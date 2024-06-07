@@ -5,11 +5,12 @@ import com.event.wear.platform.rent.domain.model.commands.AddCartItemCommand;
 import com.event.wear.platform.rent.domain.model.commands.DeleteCartItemCommand;
 import com.event.wear.platform.rent.domain.model.commands.UpdateCartItemCommand;
 import com.event.wear.platform.rent.domain.model.queries.GetAllCartItemsByUserIdQuery;
+import com.event.wear.platform.rent.domain.model.queries.GetAllCartItemsQuery;
 import com.event.wear.platform.rent.domain.model.queries.GetShoppingCartIdByUserIdQuery;
 import com.event.wear.platform.rent.domain.model.queries.GetUserShoppingCartQuery;
 import com.event.wear.platform.rent.domain.model.valueobjects.UserId;
-import com.event.wear.platform.rent.domain.services.RentCommandService;
-import com.event.wear.platform.rent.domain.services.RentQueryService;
+import com.event.wear.platform.rent.domain.services.ShoppingCartCommandService;
+import com.event.wear.platform.rent.domain.services.ShoppingCartQueryService;
 import com.event.wear.platform.rent.interfaces.rest.resources.AddItemToCartResource;
 import com.event.wear.platform.rent.interfaces.rest.resources.DeleteCartItemResource;
 import com.event.wear.platform.rent.interfaces.rest.resources.UpdateCartItemResource;
@@ -26,47 +27,18 @@ import java.util.Map;
 @RequestMapping("/cart")
 public class ShoppingCartController {
 
-    private final RentCommandService commandService;
-    private final RentQueryService queryService;
+    private final ShoppingCartCommandService commandService;
+    private final ShoppingCartQueryService queryService;
     private final AddItemToCartCommandFromResourceAssembler addItemAssembler;
     private final DeleteCartItemCommandFromResourceAssembler deleteItemAssembler;
     private final UpdateCartItemCommandFromResourceAssembler updateItemAssembler;
 
-    public ShoppingCartController(RentCommandService commandService, RentQueryService queryService, AddItemToCartCommandFromResourceAssembler addItemAssembler, DeleteCartItemCommandFromResourceAssembler deleteItemAssembler, UpdateCartItemCommandFromResourceAssembler updateItemAssembler) {
+    public ShoppingCartController(ShoppingCartCommandService commandService, ShoppingCartQueryService queryService, AddItemToCartCommandFromResourceAssembler addItemAssembler, DeleteCartItemCommandFromResourceAssembler deleteItemAssembler, UpdateCartItemCommandFromResourceAssembler updateItemAssembler) {
         this.commandService = commandService;
         this.queryService = queryService;
         this.addItemAssembler = addItemAssembler;
         this.deleteItemAssembler = deleteItemAssembler;
         this.updateItemAssembler = updateItemAssembler;
-    }
-
-
-    @PostMapping("/add")
-    public ResponseEntity<Void> addItemToCart(@RequestBody AddItemToCartResource resource) {
-        Long userId = resource.userId();
-        UserId userIdInstance = new UserId(userId);
-        var userShoppingCart = queryService.handle(new GetUserShoppingCartQuery(userIdInstance.value()));
-
-        ShoppingCart shoppingCart;
-        if (userShoppingCart.isEmpty()) {
-            shoppingCart = new ShoppingCart();
-            shoppingCart.setUserId(userId);
-        } else {
-            shoppingCart = userShoppingCart.get();
-        }
-
-        var existingItem = shoppingCart.getItems().stream()
-                .filter(item -> item.getPublicationId().equals(resource.getPublicationId()))
-                .findFirst();
-
-        if (existingItem.isPresent()) {
-            existingItem.get().setQuantity((int) (existingItem.get().getQuantity() + resource.quantity()));
-        } else {
-            AddCartItemCommand command = addItemAssembler.toCommandFromResource(resource);
-            commandService.handle(command);
-        }
-
-        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/delete/{userId}/{cartItemId}")
@@ -96,5 +68,38 @@ public class ShoppingCartController {
     return ResponseEntity.ok(shoppingCartId);
     }
 
+    @PostMapping("/add")
+    public ResponseEntity<Void> addItemToCart(@RequestBody AddItemToCartResource resource) {
+        Long userId = resource.userId();
+        UserId userIdInstance = new UserId(userId);
+        var userShoppingCart = queryService.handle(new GetUserShoppingCartQuery(userIdInstance.value()));
+
+        ShoppingCart shoppingCart;
+        if (userShoppingCart.isEmpty()) {
+            shoppingCart = new ShoppingCart();
+            shoppingCart.setUserId(userId);
+        } else {
+            shoppingCart = userShoppingCart.get();
+        }
+
+        var existingItem = shoppingCart.getItems().stream()
+                .filter(item -> item.getPublicationId().equals(resource.getPublicationId()))
+                .findFirst();
+
+        if (existingItem.isPresent()) {
+            existingItem.get().setQuantity((int) (existingItem.get().getQuantity() + resource.quantity()));
+        } else {
+            AddCartItemCommand command = addItemAssembler.toCommandFromResource(resource);
+            commandService.handle(command);
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/items/all")
+    public ResponseEntity<List<Map<String, Object>>> getAllCartItems() {
+        List<Map<String, Object>> items = queryService.handle(new GetAllCartItemsQuery());
+        return ResponseEntity.ok(items);
+    }
 
 }

@@ -2,18 +2,16 @@ package com.event.wear.platform.rent.application.internal.queryservices;
 
 import com.event.wear.platform.rent.domain.model.aggregates.ShoppingCart;
 import com.event.wear.platform.rent.domain.model.queries.*;
-import com.event.wear.platform.rent.domain.services.RentQueryService;
+import com.event.wear.platform.rent.domain.services.ShoppingCartQueryService;
 import com.event.wear.platform.rent.infrastructure.persistence.jpa.repositories.ShoppingCartRepository;
+import com.event.wear.platform.rent.interfaces.rest.resources.AddItemToCartResource;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class ShoppingQueryServicesImpl implements RentQueryService {
+public class ShoppingQueryServicesImpl implements ShoppingCartQueryService {
 
     private final ShoppingCartRepository shoppingCartRepository;
 
@@ -57,5 +55,21 @@ public class ShoppingQueryServicesImpl implements RentQueryService {
             .collect(Collectors.toList());
     }
 
+   @Override
+    public List<Map<String, Object>> handle(GetAllCartItemsQuery query) {
+    return shoppingCartRepository.findAll()
+            .stream()
+            .flatMap(shoppingCart -> shoppingCart.getItems().stream())
+            .map(item -> {
+                Map<String, Object> itemMap = new LinkedHashMap<>();
+                itemMap.put("CarItemId", item.getId());
+                itemMap.put("publicationId", item.getPublicationId().value());
+                itemMap.put("quantity", item.getQuantity());
+                itemMap.put("userId", item.getUserId());
+                itemMap.put("shoppingcartId", item.getShoppingcart_id());
+                return itemMap;
+            })
+            .collect(Collectors.toList());
+}
 
 }

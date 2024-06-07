@@ -5,13 +5,13 @@ import com.event.wear.platform.rent.domain.model.valueobjects.UserId;
 import com.event.wear.platform.rent.domain.model.aggregates.ShoppingCart;
 import com.event.wear.platform.rent.domain.model.commands.*;
 import com.event.wear.platform.rent.domain.model.entities.CartItem;
-import com.event.wear.platform.rent.domain.services.RentCommandService;
+import com.event.wear.platform.rent.domain.services.ShoppingCartCommandService;
 import com.event.wear.platform.rent.infrastructure.persistence.jpa.repositories.ShoppingCartRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ShoppingCommandsServicesImpl implements RentCommandService {
+public class ShoppingCommandsServicesImpl implements ShoppingCartCommandService {
 
     private final ShoppingCartRepository shoppingCartRepository;
 

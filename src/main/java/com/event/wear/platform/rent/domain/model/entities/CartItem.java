@@ -48,4 +48,7 @@ public class CartItem {
         return id;
     }
 
+    public Object getShoppingcart_id() {
+        return shoppingCart.getId();
+    }
 }

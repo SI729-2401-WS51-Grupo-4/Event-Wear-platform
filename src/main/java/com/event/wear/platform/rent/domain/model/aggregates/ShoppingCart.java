@@ -47,4 +47,7 @@ public class ShoppingCart extends AbstractAggregateRoot<ShoppingCart> {
     }
 
 
+    public Object getId() {
+        return shoppingcart_id;
+    }
 }
