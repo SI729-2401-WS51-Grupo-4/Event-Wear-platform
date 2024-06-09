@@ -54,7 +54,7 @@ public class TransactionCommandServiceImpl implements TransactionCommandService 
 
     @Override
     public Transaction handle(UpdateTransactionCommand command){
-        var result = transactionRepository.findById(command.transactionId().transactionId());
+        /*var result = transactionRepository.findById(command.transactionId().transactionId());
         if (result.isEmpty()){
             throw new IllegalArgumentException("Transaction does not exists");
         }
@@ -67,6 +67,7 @@ public class TransactionCommandServiceImpl implements TransactionCommandService 
             return Optional.of(updatedTransaction);
         } catch (Exception e){
             throw new IllegalArgumentException("Error while updating transaction: " + e.getMessage());
-        }
+        }*/
+        return new Transaction();
     }
 }
