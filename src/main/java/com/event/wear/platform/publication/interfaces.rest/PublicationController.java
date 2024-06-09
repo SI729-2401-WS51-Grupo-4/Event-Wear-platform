@@ -5,8 +5,18 @@ import com.event.wear.platform.publication.domain.model.commands.DeletePublicati
 import com.event.wear.platform.publication.domain.model.queries.*;
 import com.event.wear.platform.publication.domain.services.PublicationCommandService;
 import com.event.wear.platform.publication.domain.services.PublicationQueryService;
-import com.event.wear.platform.publication.interfaces.rest.resources.*;
-import com.event.wear.platform.publication.interfaces.rest.transform.*;
+import com.event.wear.platform.publication.interfaces.rest.resources.AddCommentToPublicationResource;
+import com.event.wear.platform.publication.interfaces.rest.resources.CommentResource;
+import com.event.wear.platform.publication.interfaces.rest.resources.CreatePublicationResource;
+import com.event.wear.platform.publication.interfaces.rest.resources.GarmentResource;
+import com.event.wear.platform.publication.interfaces.rest.resources.PublicationResource;
+import com.event.wear.platform.publication.interfaces.rest.resources.UpdatePublicationResource;
+import com.event.wear.platform.publication.interfaces.rest.transform.AddCommentCommandFromResourceAssembler;
+import com.event.wear.platform.publication.interfaces.rest.transform.CommentResourceFromEntityAssembler;
+import com.event.wear.platform.publication.interfaces.rest.transform.CreatePublicationCommandFromResourceAssembler;
+import com.event.wear.platform.publication.interfaces.rest.transform.GarmentResourceFromEntityAssembler;
+import com.event.wear.platform.publication.interfaces.rest.transform.PublicationResourceFromEntityAssembler;
+import com.event.wear.platform.publication.interfaces.rest.transform.UpdatePublicationCommandFromResourceAssembler;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,6 +26,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping(value = "/api/v1/publications", produces = MediaType.APPLICATION_JSON_VALUE)

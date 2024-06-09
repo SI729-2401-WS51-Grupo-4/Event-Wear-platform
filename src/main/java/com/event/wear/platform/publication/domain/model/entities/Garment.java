@@ -1,7 +1,7 @@
 package com.event.wear.platform.publication.domain.model.entities;
 
 import com.event.wear.platform.publication.domain.model.aggregates.Publication;
-import com.event.wear.platform.shared.domain.model.entities.AuditableModel;
+import pe.edu.upc.center.platform.shared.domain.model.entities.AuditableModel;
 import jakarta.persistence.*;
 import lombok.Getter;
 
