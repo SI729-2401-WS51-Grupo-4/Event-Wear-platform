@@ -23,7 +23,7 @@ public class CartItem {
     @Setter
     @ManyToOne
     @JoinColumn(name = "shopping_cart_id")
-    private ShoppingCart shoppingCart;
+    private ShoppingCart shoppingCartid;
 
     @Setter
     @Getter
@@ -49,6 +49,6 @@ public class CartItem {
     }
 
     public Object getShoppingcart_id() {
-        return shoppingCart.getId();
+        return shoppingCartid.getId();
     }
 }
