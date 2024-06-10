@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DeleteCartItemCommandFromResourceAssembler {
     public DeleteCartItemCommand toCommandFromResource(DeleteCartItemResource resource) {
-        return new DeleteCartItemCommand(resource.getUserId().value(), resource.cartItemId());
+        return new DeleteCartItemCommand(resource.getUserId().userId(), resource.cartItemId());
     }
 
 }

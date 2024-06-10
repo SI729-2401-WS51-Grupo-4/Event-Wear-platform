@@ -1,6 +1,7 @@
 package com.event.wear.platform.rent.domain.model.aggregates;
 
 import com.event.wear.platform.rent.domain.model.entities.CartItem;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -21,15 +22,19 @@ public class ShoppingCart extends AbstractAggregateRoot<ShoppingCart> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long shoppingcart_id;
 
+    @Getter
+    @Column(unique = true)
     private Long userId;
 
+
     @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonBackReference
     private List<CartItem> items= new ArrayList<>(); // Initialize the list
 
     public ShoppingCart() {
     }
 
-    public void addItem(CartItem item) {
+   /* public void addItem(CartItem item) {
         items.add(item);
         item.setShoppingCart(this);
     }
@@ -45,7 +50,10 @@ public class ShoppingCart extends AbstractAggregateRoot<ShoppingCart> {
         }
         item.setQuantity(newQuantity);
     }
-
+    */
+    public void updateCartItemUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public Object getId() {
         return shoppingcart_id;

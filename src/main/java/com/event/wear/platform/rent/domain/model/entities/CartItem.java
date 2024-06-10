@@ -3,6 +3,7 @@ package com.event.wear.platform.rent.domain.model.entities;
 import com.event.wear.platform.rent.domain.model.aggregates.ShoppingCart;
 import com.event.wear.platform.rent.domain.model.valueobjects.PublicationId;
 import com.event.wear.platform.rent.domain.model.valueobjects.UserId;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +13,7 @@ import lombok.Setter;
 public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long cartItemId;
 
     @Setter
     @Getter
@@ -23,7 +24,8 @@ public class CartItem {
     @Setter
     @ManyToOne
     @JoinColumn(name = "shopping_cart_id")
-    private ShoppingCart shoppingCartid;
+    @JsonBackReference
+    private ShoppingCart shoppingCart;
 
     @Setter
     @Getter
@@ -45,10 +47,11 @@ public class CartItem {
     }
 
     public Object getId() {
-        return id;
+        return cartItemId;
     }
 
     public Object getShoppingcart_id() {
-        return shoppingCartid.getId();
+        return shoppingCart.getId();
     }
+
 }

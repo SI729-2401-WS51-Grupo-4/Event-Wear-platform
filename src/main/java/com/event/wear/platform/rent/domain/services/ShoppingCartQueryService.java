@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface ShoppingCartQueryService {
     Optional<ShoppingCart> handle(GetUserShoppingCartQuery query);
-    List<Map<String, Object>> handle(GetAllCartItemsByUserIdQuery query);
+    Optional<ShoppingCart> handle(GetAllCartItemsByUserIdQuery query);
     List<Map<String, Object>> handle(GetShoppingCartIdByUserIdQuery query);
     List<Map<String, Object>> handle(GetAllCartItemsQuery query);
 }
