@@ -6,9 +6,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class AddItemToCartCommandFromResourceAssembler {
     public AddCartItemCommand toCommandFromResource(AddItemToCartResource resource) {
-        Long shoppingId = resource.getUserId().value();
-        Long userId = resource.getUserId().value();
-        return new AddCartItemCommand(userId, shoppingId, resource.getPublicationId().value(), resource.quantity());
+        return new AddCartItemCommand(resource.userId(),resource.publicationId(), resource.quantity());
+
     }
 
 }

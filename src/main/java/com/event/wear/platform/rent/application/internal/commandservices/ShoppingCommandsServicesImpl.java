@@ -31,7 +31,7 @@ public class ShoppingCommandsServicesImpl implements ShoppingCartCommandService 
                 });
         UserId userIdInstance = new UserId(userId);
         PublicationId publicationIdInstance = new PublicationId(command.publicationId());
-        int quantity = command.getQuantity();
+        int quantity = Math.toIntExact(command.quantity());
     CartItem newItem = new CartItem(userIdInstance, publicationIdInstance, quantity);
         shoppingCart.addItem(newItem);
         shoppingCartRepository.save(shoppingCart);
