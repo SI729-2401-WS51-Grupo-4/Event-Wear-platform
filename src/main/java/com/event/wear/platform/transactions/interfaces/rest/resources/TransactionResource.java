@@ -4,6 +4,6 @@ import com.event.wear.platform.transactions.domain.model.valueobjects.PaymentMet
 
 import java.util.Date;
 
-public record TransactionResource(Long Id, Long rentId, Long userId, Long lessorId,
+public record TransactionResource(Long Id, Long userId, Long lessorId,
                                   int amount, Date date, PaymentMethod paymentMethod, String paymentDetails) {
 }

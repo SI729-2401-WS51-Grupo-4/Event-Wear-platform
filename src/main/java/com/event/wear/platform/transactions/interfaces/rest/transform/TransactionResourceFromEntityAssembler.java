@@ -5,7 +5,7 @@ import com.event.wear.platform.transactions.interfaces.rest.resources.Transactio
 
 public class TransactionResourceFromEntityAssembler {
     public static TransactionResource toResourceFromEntity(Transaction entity) {
-        return new TransactionResource(entity.getId(), entity.getRentId().rentId(), entity.getUserId().userId(), entity.getLessorId().lessorId(),
+        return new TransactionResource(entity.getId(), entity.getUserId().userId(), entity.getLessorId().lessorId(),
                 entity.getAmount(), entity.getDate(), entity.getPaymentMethod(), entity.getPaymentDetails());
     }
 }
