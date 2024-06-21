@@ -1,4 +1,7 @@
 package com.event.wear.platform.transactions.interfaces.rest.resources;
 
-public record DeleteTransactionFromTransactionHistoryResource() {
+import com.event.wear.platform.transactions.domain.model.valueobjects.TransactionHistoryId;
+import com.event.wear.platform.transactions.domain.model.valueobjects.TransactionId;
+
+public record DeleteTransactionFromTransactionHistoryResource(TransactionHistoryId transactionHistoryId, TransactionId transactionId) {
 }

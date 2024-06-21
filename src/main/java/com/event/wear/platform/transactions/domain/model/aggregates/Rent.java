@@ -1,6 +1,6 @@
 package com.event.wear.platform.transactions.domain.model.aggregates;
 
-import com.event.wear.platform.shared.domain.model.entities.AuditableModel;
+import pe.edu.upc.center.platform.shared.domain.model.entities.AuditableModel;
 import com.event.wear.platform.transactions.domain.model.valueobjects.ProductId;
 import com.event.wear.platform.transactions.domain.model.valueobjects.RentId;
 import com.event.wear.platform.transactions.domain.model.valueobjects.TransactionId;

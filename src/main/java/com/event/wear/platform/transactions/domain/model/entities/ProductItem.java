@@ -1,6 +1,6 @@
 package com.event.wear.platform.transactions.domain.model.entities;
 
-import com.event.wear.platform.shared.domain.model.entities.AuditableModel;
+import pe.edu.upc.center.platform.shared.domain.model.entities.AuditableModel;
 import com.event.wear.platform.transactions.domain.model.valueobjects.ProductId;
 import jakarta.persistence.*;
 import lombok.Getter;
