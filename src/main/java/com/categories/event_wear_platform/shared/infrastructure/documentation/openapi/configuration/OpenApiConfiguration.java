@@ -25,5 +25,7 @@ public class OpenApiConfiguration {
                         .url("https://github.com/SI729-2401-WS51-Grupo-4/documentation"));
         return openApi;
     }
+
+
 }
 
