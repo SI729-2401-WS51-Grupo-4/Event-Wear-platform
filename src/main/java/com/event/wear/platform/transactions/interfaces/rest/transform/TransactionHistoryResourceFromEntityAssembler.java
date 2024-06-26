@@ -5,6 +5,6 @@ import com.event.wear.platform.transactions.interfaces.rest.resources.Transactio
 
 public class TransactionHistoryResourceFromEntityAssembler {
     public static TransactionHistoryResource toResourceFromEntity(TransactionHistory entity){
-        return new TransactionHistoryResource(entity.getId());
+        return new TransactionHistoryResource(entity.getId(), entity.getTransactionList());
     }
 }

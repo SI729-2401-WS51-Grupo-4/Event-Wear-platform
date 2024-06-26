@@ -30,9 +30,7 @@ public class Rent extends AuditableModel {
     @Embedded
     private ProductId productId;
 
-    @ManyToOne
-    @JoinColumn(name = "transactionId")
-    private Transaction transaction;
+    private long transactionId;
 
     private Date date;
 

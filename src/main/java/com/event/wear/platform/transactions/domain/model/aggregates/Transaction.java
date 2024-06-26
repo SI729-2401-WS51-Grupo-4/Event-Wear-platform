@@ -24,10 +24,6 @@ public class Transaction extends AuditableModel {
     @Column(name = "transaction_id")
     private final TransactionId transactionId;
 
-    @ManyToOne
-    @JoinColumn(name = "transactionHistoryId")
-    private TransactionHistory transactionHistory;
-
     @OneToMany(mappedBy = "rentId", cascade = CascadeType.ALL)
     private List<Rent> rents;
 

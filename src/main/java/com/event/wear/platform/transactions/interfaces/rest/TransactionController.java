@@ -33,14 +33,14 @@ public class TransactionController {
     public ResponseEntity<TransactionResource> getTransactionById(@PathVariable long transactionId) {
         var getTransactionByIdQuery = new GetTransactionByIdQuery(new TransactionId(transactionId));
         var transaction = transactionQueryService.handle(getTransactionByIdQuery);
-
         if(transaction.isEmpty())
             return ResponseEntity.badRequest().build();
         var transactionResource = TransactionResourceFromEntityAssembler.toResourceFromEntity(transaction.get());
         return ResponseEntity.ok(transactionResource);
     }
 
-    @GetMapping ResponseEntity<List<TransactionResource>> getAllTransaction(){
+    @GetMapping
+    public ResponseEntity<List<TransactionResource>> getAllTransaction(){
         var getAllTransactionsQuery = new GetAllTransactionsQuery();
         var transactions = transactionQueryService.handle(getAllTransactionsQuery);
         var transactionsResources = transactions.stream().map(TransactionResourceFromEntityAssembler::toResourceFromEntity).toList();

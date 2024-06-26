@@ -11,14 +11,15 @@ import java.util.List;
 @Embeddable
 public class TransactionList {
 
-    @OneToMany(mappedBy = "transactionHistory", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "transactionHistoryId", cascade = CascadeType.ALL)
     private List<Transaction> transactions;
 
     public TransactionList() {
-        this.transactions = new ArrayList<>();
+        this.transactions = new ArrayList<Transaction>();
     }
 
     public void addTransaction(Transaction transaction) {
+        System.out.println(transaction.WriteDetails());
         this.transactions.add(transaction);
     }
 

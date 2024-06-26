@@ -36,6 +36,7 @@ public class TransactionHistory extends AuditableModel {
 
     public void addTransaction(Transaction transaction) {
         transactionList.addTransaction(transaction);
+        System.out.println("guardado");
     }
 
     public void deleteTransaction(Transaction transaction){
