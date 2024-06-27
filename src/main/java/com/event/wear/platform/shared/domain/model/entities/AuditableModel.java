@@ -1,4 +1,4 @@
-package pe.edu.upc.center.platform.shared.domain.model.entities;
+package com.event.wear.platform.shared.domain.model.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

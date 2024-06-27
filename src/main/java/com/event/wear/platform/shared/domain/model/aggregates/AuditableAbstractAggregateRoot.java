@@ -1,4 +1,4 @@
-package pe.edu.upc.center.platform.shared.domain.model.aggregates;
+package com.event.wear.platform.shared.domain.model.aggregates;
 
 import jakarta.persistence.*;
 import lombok.Getter;

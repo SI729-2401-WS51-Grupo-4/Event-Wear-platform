@@ -27,6 +27,7 @@ public class OpenApiConfiguration {
             .description("Event Wear Platform wiki Documentation")
             .url("https/event-wear-platform.com/docs"));
 
+
     // Add security scheme
     final String securitySchemeName = "bearerAuth";
 
