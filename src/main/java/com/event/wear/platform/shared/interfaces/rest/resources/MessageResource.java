@@ -1,4 +1,4 @@
-package com.event.wear.platform.shared.interfaces.rest.resources;
+package pe.edu.upc.center.platform.shared.interfaces.rest.resources;
 
 public record MessageResource(String message) {
 }

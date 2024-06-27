@@ -13,19 +13,20 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenApiConfiguration {
   @Bean
-  public OpenAPI learningPlatformOpenApi() {
+  public OpenAPI eventWearPlatformOpenApi() {
     // General configuration
     var openApi = new OpenAPI();
     openApi
         .info(new Info()
-            .title("Learning Platform API")
-            .description("Learning Platform application REST API documentation.")
+            .title("Event Wear Platform API")
+            .description("Event Wear Platform application REST API documentation.")
             .version("v1.0.0")
             .license(new License().name("Apache 2.0")
                 .url("https://springdoc.org")))
         .externalDocs(new ExternalDocumentation()
-            .description("Learning Platform wiki Documentation")
-            .url("https://github.com/upc-is-si729/daos-language-reference"));
+            .description("Event Wear Platform wiki Documentation")
+            .url("https/event-wear-platform.com/docs"));
+
 
     // Add security scheme
     final String securitySchemeName = "bearerAuth";
