@@ -1,75 +1,50 @@
 package com.event.wear.platform.rent.application.internal.queryservices;
 
 import com.event.wear.platform.rent.domain.model.aggregates.ShoppingCart;
-import com.event.wear.platform.rent.domain.model.queries.*;
+import com.event.wear.platform.rent.domain.model.entities.CartItem;
+import com.event.wear.platform.rent.domain.model.queries.GetAllCartItemsByUserIdQuery;
+import com.event.wear.platform.rent.domain.model.queries.GetAllCartItemsQuery;
+import com.event.wear.platform.rent.domain.model.queries.GetShoppingCartIdByUserIdQuery;
+import com.event.wear.platform.rent.domain.model.valueobjects.UserId;
 import com.event.wear.platform.rent.domain.services.ShoppingCartQueryService;
+import com.event.wear.platform.rent.infrastructure.persistence.jpa.repositories.CartItemRepository;
 import com.event.wear.platform.rent.infrastructure.persistence.jpa.repositories.ShoppingCartRepository;
-import com.event.wear.platform.rent.interfaces.rest.resources.AddItemToCartResource;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ShoppingQueryServicesImpl implements ShoppingCartQueryService {
 
     private final ShoppingCartRepository shoppingCartRepository;
+    private final CartItemRepository cartItemRepository;
 
-    public ShoppingQueryServicesImpl(ShoppingCartRepository shoppingCartRepository) {
+    public ShoppingQueryServicesImpl(ShoppingCartRepository shoppingCartRepository, CartItemRepository cartItemRepository) {
         this.shoppingCartRepository = shoppingCartRepository;
+        this.cartItemRepository = cartItemRepository;
     }
 
     @Override
-    public Optional<ShoppingCart> handle(GetUserShoppingCartQuery query) {
-        Long userId = query.userId();
-        return shoppingCartRepository.findByUserId(userId)
-                .stream()
-                .findFirst();
+    public List<CartItem> handle(GetAllCartItemsQuery query) {
+        return cartItemRepository.findAll();
     }
 
     @Override
-   public List<Map<String, Object>> handle(GetAllCartItemsByUserIdQuery query) {
-    Long userId = query.userId();
-    return shoppingCartRepository.findByUserId(userId)
-            .stream()
-            .flatMap(shoppingCart -> shoppingCart.getItems().stream())
-            .map(item -> {
-                Map<String, Object> itemMap = new HashMap<>();
-                itemMap.put("publicationId", item.getPublicationId().value());
-                itemMap.put("quantity", item.getQuantity());
-                return itemMap;
-            })
-            .collect(Collectors.toList()).reversed();
+        public List<CartItem> handle(GetAllCartItemsByUserIdQuery query) {
+        var userId = new UserId(query.userId());
+        List<CartItem> cartItems = cartItemRepository.findAllByUserId(userId);
+        if (cartItems == null) {
+            return new ArrayList<CartItem>();
+        }
+        return cartItems;
     }
 
-   @Override
-    public List<Map<String, Object>> handle(GetShoppingCartIdByUserIdQuery query) {
-    Long userId = query.userId();
-    return shoppingCartRepository.findByUserId(userId)
-            .stream()
-            .map(shoppingCart -> {
-                Map<String, Object> shoppingCartMap = new HashMap<>();
-                shoppingCartMap.put("shoppingcart_id", shoppingCart.getShoppingcart_id());
-                return shoppingCartMap;
-            })
-            .collect(Collectors.toList());
-    }
+    @Override
+    public Optional<ShoppingCart> handle(GetShoppingCartIdByUserIdQuery query) {
+        return shoppingCartRepository.findById(query.userId());
 
-   @Override
-    public List<Map<String, Object>> handle(GetAllCartItemsQuery query) {
-    return shoppingCartRepository.findAll()
-            .stream()
-            .flatMap(shoppingCart -> shoppingCart.getItems().stream())
-            .map(item -> {
-                Map<String, Object> itemMap = new LinkedHashMap<>();
-                itemMap.put("CarItemId", item.getId());
-                itemMap.put("publicationId", item.getPublicationId().value());
-                itemMap.put("quantity", item.getQuantity());
-                itemMap.put("userId", item.getUserId());
-                itemMap.put("shoppingcartId", item.getShoppingcart_id());
-                return itemMap;
-            })
-            .collect(Collectors.toList());
-}
+    }
 
 }

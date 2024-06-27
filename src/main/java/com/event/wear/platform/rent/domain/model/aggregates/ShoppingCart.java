@@ -1,37 +1,35 @@
 package com.event.wear.platform.rent.domain.model.aggregates;
 
+import com.event.wear.platform.rent.domain.model.commands.CreateShoppingCartCommand;
 import com.event.wear.platform.rent.domain.model.entities.CartItem;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.event.wear.platform.rent.domain.model.valueobjects.UserId;
+import com.event.wear.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
-import org.springframework.data.domain.AbstractAggregateRoot;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Setter
+
 @Getter
 @Entity
-
-public class ShoppingCart extends AbstractAggregateRoot<ShoppingCart> {
+public class ShoppingCart extends AuditableAbstractAggregateRoot<ShoppingCart> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long shoppingcart_id;
+    private Long id;
 
-    private Long userId;
+    @Embedded
+    private UserId userId;
 
     @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<CartItem> items= new ArrayList<>(); // Initialize the list
+    private List<CartItem> items= new ArrayList<>();
 
-    public ShoppingCart() {
+    public ShoppingCart(CreateShoppingCartCommand command) {
+        this.userId = new UserId(command.userId());
     }
 
-    public void addItem(CartItem item) {
-        items.add(item);
-        item.setShoppingCart(this);
+    public ShoppingCart() {
+
     }
 
     public void removeItem(CartItem item) {
@@ -39,15 +37,10 @@ public class ShoppingCart extends AbstractAggregateRoot<ShoppingCart> {
         item.setShoppingCart(null);
     }
 
-    public void updateItemQuantity(CartItem item, int newQuantity) {
-        if (newQuantity < 0) {
+    public void updateItemQuantity(CartItem itemToUpdate, Integer integer) {
+        if (integer < 0) {
             throw new IllegalArgumentException("Quantity cannot be negative");
         }
-        item.setQuantity(newQuantity);
-    }
-
-
-    public Object getId() {
-        return shoppingcart_id;
+        itemToUpdate.setQuantity(integer);
     }
 }
