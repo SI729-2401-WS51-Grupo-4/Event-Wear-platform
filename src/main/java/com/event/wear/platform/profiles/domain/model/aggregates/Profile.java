@@ -1,5 +1,6 @@
 package com.event.wear.platform.profiles.domain.model.aggregates;
 
+import com.event.wear.platform.profiles.domain.model.valueobjects.UserId;
 import jakarta.persistence.*;
 import com.event.wear.platform.profiles.domain.model.commands.CreateProfileCommand;
 import com.event.wear.platform.profiles.domain.model.valueobjects.EmailAddress;
@@ -27,16 +28,21 @@ public class Profile extends AuditableAbstractAggregateRoot<Profile> {
           @AttributeOverride(name = "country", column = @Column(name = "address_country"))})
   private StreetAddress address;
 
-  public Profile(String firstName, String lastName, String email, String street, String number, String city, String postalCode, String country) {
+  @Embedded
+  UserId userId;
+
+  public Profile(String firstName, String lastName, String email, String street, String number, String city, String postalCode, String country, Long userId) {
     this.name = new PersonName(firstName, lastName);
     this.email = new EmailAddress(email);
     this.address = new StreetAddress(street, number, city, postalCode, country);
+    this.userId = new UserId(userId);
   }
 
   public Profile(CreateProfileCommand command) {
     this.name = new PersonName(command.firstName(), command.lastName());
     this.email = new EmailAddress(command.email());
     this.address = new StreetAddress(command.street(), command.number(), command.city(), command.postalCode(), command.country());
+    this.userId = new UserId(command.userId());
   }
 
   public Profile() {
