@@ -50,37 +50,51 @@ public class ShoppingCommandsServicesImpl implements ShoppingCartCommandService 
             cartItemRepository.save(itemToDelete);
         } else {
             shoppingCart.removeItem(itemToDelete);
-        shoppingCartRepository.save(shoppingCart);
-        cartItemRepository.delete(itemToDelete);
+            shoppingCartRepository.save(shoppingCart);
+            cartItemRepository.delete(itemToDelete);
         }
     }
 
    @Override
-    public CartItem handle(AddCartItemCommand command) {
-        UserId userId = new UserId(command.userId());
+public CartItem handle(AddCartItemCommand command) {
+    UserId userId = new UserId(command.userId());
 
-        Optional<ShoppingCart> shoppingCartOptional = shoppingCartRepository.findByUserId(userId);
+    Optional<ShoppingCart> shoppingCartOptional = shoppingCartRepository.findByUserId(userId);
 
-        ShoppingCart shoppingCart;
+    ShoppingCart shoppingCart;
 
-        if (!shoppingCartOptional.isPresent()) {
-            CreateShoppingCartCommand createShoppingCartCommand = new CreateShoppingCartCommand(command.userId());
-            shoppingCart = this.handle(createShoppingCartCommand);
-        } else {
-            shoppingCart = shoppingCartOptional.get();
-        }
-
-        CartItem cartItem = new CartItem(command);
-        cartItem.setShoppingCart(shoppingCart);
-
-        try {
-            cartItemRepository.save(cartItem);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Error adding cart item");
-        }
-
-        return cartItem;
+    if (!shoppingCartOptional.isPresent()) {
+        CreateShoppingCartCommand createShoppingCartCommand = new CreateShoppingCartCommand(command.userId());
+        shoppingCart = this.handle(createShoppingCartCommand);
+    } else {
+        shoppingCart = shoppingCartOptional.get();
     }
+
+    // Buscar si el CartItem ya existe en el ShoppingCart
+    Optional<CartItem> existingCartItemOptional = shoppingCart.getItems().stream()
+        .filter(item -> item.getCartItemId().equals(command.cartItemId()))
+        .findFirst();
+
+    CartItem cartItem;
+
+    if (existingCartItemOptional.isPresent()) {
+        // Si el CartItem ya existe, incrementa su cantidad
+        cartItem = existingCartItemOptional.get();
+        cartItem.setQuantity(cartItem.getQuantity() + 1);
+    } else {
+        // Si el CartItem no existe, crea uno nuevo y lo añade al ShoppingCart
+        cartItem = new CartItem(command);
+        cartItem.setShoppingCart(shoppingCart);
+    }
+
+    try {
+        cartItemRepository.save(cartItem);
+    } catch (Exception e) {
+        throw new IllegalArgumentException("Error adding cart item");
+    }
+
+    return cartItem;
+}
 
     @Override
     public void handle(UpdateCartItemCommand command) {
