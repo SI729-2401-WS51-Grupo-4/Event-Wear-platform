@@ -30,7 +30,7 @@ public class CategoryController {
         this.categoryQueryService = categoryQueryService;
     }
     @Operation(summary = "Create a new category")
-    @CrossOrigin(origins = "https://event-wear-e6af8.web.app")
+    @CrossOrigin(origins = "http://localhost:4200/category")
     @PostMapping
     public ResponseEntity<?> createCategory(@Valid @RequestBody CreateCategoryCommand command) {
         try {
@@ -42,7 +42,7 @@ public class CategoryController {
         }
     }
     @Operation(summary = "Get all categories")
-    @CrossOrigin(origins = "https://event-wear-e6af8.web.app/")
+    @CrossOrigin(origins = "http://localhost:4200/category")
     @GetMapping
     public ResponseEntity<List<Category>> getAllCategories() {
         List<Category> categories = categoryQueryService.findAll();
@@ -50,7 +50,7 @@ public class CategoryController {
     }
 
     @Operation(summary = "Get a category by ID")
-    @CrossOrigin(origins = "https://event-wear-e6af8.web.app/")
+    @CrossOrigin(origins = "http://localhost:4200/category")
     @GetMapping("/{id}")
     public ResponseEntity<Category> getCategoryById(@PathVariable String id) {
         Optional<Category> category = categoryQueryService.findById(id);
@@ -59,7 +59,7 @@ public class CategoryController {
     }
 
     @Operation(summary = "Delete a category by ID")
-    @CrossOrigin(origins = "https://event-wear-e6af8.web.app/")
+    @CrossOrigin(origins = "http://localhost:4200/category")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategoryById(@PathVariable String id) {
         Optional<Category> category = categoryQueryService.findById(id);
@@ -71,7 +71,7 @@ public class CategoryController {
         }
     }
     @Operation(summary = "Update a category")
-    @CrossOrigin(origins = "https://event-wear-e6af8.web.app/")
+    @CrossOrigin(origins = "http://localhost:4200/category")
     @PutMapping("/{id}")
     public ResponseEntity<Category> updateCategory(@PathVariable String id, @RequestBody UpdateCategoryCommand command) {
         command.setId(id);
@@ -80,7 +80,7 @@ public class CategoryController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
     @Operation(summary = "Add a category to favorites")
-    @CrossOrigin(origins = "https://event-wear-e6af8.web.app/")
+    @CrossOrigin(origins = "http://localhost:4200/category")
     @PostMapping("/{id}/favorite")
     public ResponseEntity<Category> addCategoryToFavorites(@PathVariable String id) {
         AddCategoryToFavoritesCommand command = new AddCategoryToFavoritesCommand(id);
@@ -90,7 +90,7 @@ public class CategoryController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
     @Operation(summary = "Get favorite categories")
-    @CrossOrigin(origins = "https://event-wear-e6af8.web.app/")
+    @CrossOrigin(origins = "http://localhost:4200/category")
     @GetMapping("/favorites")
     public ResponseEntity<List<Category>> getFavoriteCategories() {
         List<Category> categories = categoryQueryService.findFavorites();
