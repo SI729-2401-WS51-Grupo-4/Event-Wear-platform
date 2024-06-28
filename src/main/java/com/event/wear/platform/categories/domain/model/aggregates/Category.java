@@ -1,6 +1,7 @@
 package com.event.wear.platform.categories.domain.model.aggregates;
 
 import com.event.wear.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
+import com.event.wear.platform.shared.domain.model.aggregates.AuditableAbstractCategory;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
@@ -14,7 +15,7 @@ import lombok.Setter;
                 @UniqueConstraint(columnNames = {"image", "image2"}),
                 @UniqueConstraint(columnNames = {"description", "category_type"})
         })
-public class Category extends AuditableAbstractAggregateRoot<Category> {
+public class Category extends AuditableAbstractCategory<Category> {
 
     @Setter
     @Getter
