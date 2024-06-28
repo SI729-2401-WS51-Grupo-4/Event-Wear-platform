@@ -1,4 +1,4 @@
 package com.event.wear.platform.publication.interfaces.rest.resources;
 
-public record PublicationResource (Integer cost, Long lessorId, String title, String description, String size){
+public record PublicationResource (Integer id, String image, String title, String description, Integer price, Integer rating){
 }

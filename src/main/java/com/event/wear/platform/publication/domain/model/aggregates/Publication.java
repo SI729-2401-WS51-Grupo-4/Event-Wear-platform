@@ -48,19 +48,24 @@ public class Publication extends AbstractAggregateRoot<Publication> {
     @Embedded
     private CommentManager commentManager;
 
+    private String image;
+
     public Publication() {
         this.cost = 0;
         this.lessorId = new LessorId();
         this.commentManager = new CommentManager();
+        this.image = "";
     }
 
-    public Publication(Integer cost, LessorId lessorId, Garment garment) {
+    public Publication(Integer cost, LessorId lessorId, Garment garment, String image) {
         this.id = new SecureRandom().nextLong();
         this.cost = cost;
         this.lessorId = lessorId;
         this.garment = garment;
         this.garment.setPublication(this);
         this.commentManager = new CommentManager();
+        this.image = image;
+        this.rating = 0.0;
     }
 
     public void updateCost(Integer cost) {

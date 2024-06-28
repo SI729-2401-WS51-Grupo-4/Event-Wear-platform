@@ -22,7 +22,7 @@ public class PublicationCommandServiceImpl implements PublicationCommandService 
             throw new IllegalArgumentException("Publication already exists");
         }
         var garment = new Garment(command.garment().getTitle(), command.garment().getDescription(), command.garment().getSize());
-        var publication = new Publication(command.cost(), command.lessorId(), garment);
+        var publication = new Publication(command.cost(), command.lessorId(), garment, command.image());
         publicationRepository.save(publication);
         return publication;
     }

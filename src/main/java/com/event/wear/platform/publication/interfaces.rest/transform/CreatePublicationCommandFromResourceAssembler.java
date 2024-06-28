@@ -14,6 +14,7 @@ public class CreatePublicationCommandFromResourceAssembler {
                         resource.title(),
                         resource.description(),
                         resource.size())
+                , resource.image()
         );
     }
 }

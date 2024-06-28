@@ -8,11 +8,12 @@ import java.util.Optional;
 public class PublicationResourceFromEntityAssembler {
     public static PublicationResource toResourceFromEntity(Publication entity) {
         return new PublicationResource(
-                entity.getCost(),
-                entity.getLessorId().lessorId(),
+                entity.getId().intValue(),
+                entity.getImage(),
                 entity.getGarment().getTitle(),
                 entity.getGarment().getDescription(),
-                entity.getGarment().getSize()
+                entity.getCost(),
+                entity.getRating().intValue()
         );
     }
 }

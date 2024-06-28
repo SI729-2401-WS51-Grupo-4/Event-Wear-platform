@@ -103,7 +103,8 @@ public class WebSecurityConfiguration {
         .authorizeHttpRequests(
             authorizeRequests -> authorizeRequests.requestMatchers(
                 "/api/v1/authentication/**", "/v3/api-docs/**", "/swagger-ui.html",
-                "/swagger-ui/**", "/swagger-resources/**", "/webjars/**","/api/v1/profiles/**")
+                "/swagger-ui/**", "/swagger-resources/**", "/webjars/**","/api/v1/profiles/**",
+                            "/api/v1/publications/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated());
