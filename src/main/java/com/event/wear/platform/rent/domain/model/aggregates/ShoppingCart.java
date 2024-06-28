@@ -38,9 +38,12 @@ public class ShoppingCart extends AuditableAbstractAggregateRoot<ShoppingCart> {
     }
 
     public void updateItemQuantity(CartItem itemToUpdate, Integer integer) {
-        if (integer < 0) {
-            throw new IllegalArgumentException("Quantity cannot be negative");
-        }
-        itemToUpdate.setQuantity(integer);
+    if (integer == null) {
+        throw new IllegalArgumentException("Quantity cannot be null");
+    }
+    if (integer < 0) {
+        throw new IllegalArgumentException("Quantity cannot be negative");
+    }
+    itemToUpdate.setQuantity(integer);
     }
 }

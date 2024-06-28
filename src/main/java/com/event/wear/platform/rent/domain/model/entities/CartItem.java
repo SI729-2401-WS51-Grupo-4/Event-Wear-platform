@@ -43,18 +43,33 @@ public class CartItem extends AuditableModel {
     @Embedded
     private UserId userId;
 
+    @Setter
+    @Getter
+    @Column(nullable = false, unique = true)
+    private Long cartItemId;
+
+
+    private String Urlimage;
+    private String title;
+    private Double price;
+
     public CartItem() {
+        this.cartItemId = 0L;
         this.publicationId = new PublicationId();
         this.quantity = 0;
         this.userId = new UserId();
+        this.Urlimage = "";
+        this.title = "";
+        this.price = 0.0;
     }
 
-
     public CartItem(AddCartItemCommand command) {
+        this.cartItemId = command.cartItemId();
         this.userId = new UserId(command.userId());
         this.publicationId = new PublicationId(command.publicationId());
         this.quantity = command.quantity();
+        this.Urlimage = command.Urlimage();
+        this.title = command.title();
+        this.price = command.price();
     }
-
-
 }

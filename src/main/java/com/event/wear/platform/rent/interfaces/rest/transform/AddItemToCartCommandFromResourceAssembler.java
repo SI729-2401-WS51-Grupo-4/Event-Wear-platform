@@ -7,9 +7,13 @@ import org.springframework.stereotype.Component;
 public class AddItemToCartCommandFromResourceAssembler {
    public static AddCartItemCommand toCommandFromResource(Long userId, AddItemToCartResource resource) {
         return new AddCartItemCommand(
+                resource.cartItemId(),
                 userId,
                 resource.publicationId(),
-                resource.quantity()
+                resource.quantity(),
+                resource.Urlimage(),
+                resource.title(),
+                resource.price()
         );
    }
 }

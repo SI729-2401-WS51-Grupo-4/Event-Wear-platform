@@ -35,46 +35,51 @@ public class ShoppingCommandsServicesImpl implements ShoppingCartCommandService 
         return shoppingcart;
     }
 
-   @Override
-   public void handle(DeleteCartItemCommand command) {
-       Long userId = command.userId();
-       ShoppingCart shoppingCart = shoppingCartRepository.findById(userId)
-               .orElseThrow(() -> new IllegalArgumentException("ShoppingCart not found"));
-       CartItem itemToRemove = shoppingCart.getItems().stream()
-               .filter(item -> item.getId().equals(command.cartItemId()))
-               .findFirst()
-               .orElseThrow(() -> new IllegalArgumentException("CartItem not found"));
-       shoppingCart.removeItem(itemToRemove);
-       shoppingCartRepository.save(shoppingCart);
-   }
-
     @Override
+    public void handle(DeleteCartItemCommand command) {
+        UserId userId = new UserId(command.userId());
+        ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("ShoppingCart not found"));
+        CartItem itemToDelete = shoppingCart.getItems().stream()
+                .filter(item -> item.getCartItemId().equals(command.cartItemId()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("CartItem not found"));
+
+        if (itemToDelete.getQuantity() > 1) {
+            itemToDelete.setQuantity(itemToDelete.getQuantity() - 1);
+            cartItemRepository.save(itemToDelete);
+        } else {
+            shoppingCart.removeItem(itemToDelete);
+        shoppingCartRepository.save(shoppingCart);
+        cartItemRepository.delete(itemToDelete);
+        }
+    }
+
+   @Override
     public CartItem handle(AddCartItemCommand command) {
-            UserId userId = new UserId(command.userId());
+        UserId userId = new UserId(command.userId());
 
-            Optional<ShoppingCart> shoppingCartOptional = shoppingCartRepository.findByUserId(userId);
+        Optional<ShoppingCart> shoppingCartOptional = shoppingCartRepository.findByUserId(userId);
 
-            ShoppingCart shoppingCart;
+        ShoppingCart shoppingCart;
 
-            if (!shoppingCartOptional.isPresent()) {
-                CreateShoppingCartCommand createShoppingCartCommand = new CreateShoppingCartCommand(command.userId());
-                shoppingCart = this.handle(createShoppingCartCommand);
-            } else {
+        if (!shoppingCartOptional.isPresent()) {
+            CreateShoppingCartCommand createShoppingCartCommand = new CreateShoppingCartCommand(command.userId());
+            shoppingCart = this.handle(createShoppingCartCommand);
+        } else {
+            shoppingCart = shoppingCartOptional.get();
+        }
 
-                shoppingCart = shoppingCartOptional.get();
-            }
+        CartItem cartItem = new CartItem(command);
+        cartItem.setShoppingCart(shoppingCart);
 
+        try {
+            cartItemRepository.save(cartItem);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Error adding cart item");
+        }
 
-            CartItem cartItem = new CartItem(command);
-            cartItem.setShoppingCart(shoppingCart);
-
-            try {
-                cartItemRepository.save(cartItem);
-            } catch (Exception e) {
-                throw new IllegalArgumentException("Error adding cart item");
-            }
-
-            return cartItem;
+        return cartItem;
     }
 
     @Override
@@ -86,7 +91,13 @@ public class ShoppingCommandsServicesImpl implements ShoppingCartCommandService 
                 .filter(item -> item.getId().equals(command.cartItemId()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("CartItem not found"));
-        shoppingCart.updateItemQuantity(itemToUpdate, command.newQuantity());
+
+        Integer newQuantity = command.newQuantity();
+        if (newQuantity == null) {
+            throw new IllegalArgumentException("Quantity cannot be null");
+        }
+
+        shoppingCart.updateItemQuantity(itemToUpdate, newQuantity);
         shoppingCartRepository.save(shoppingCart);
     }
 
