@@ -4,6 +4,7 @@ import com.event.wear.platform.publication.domain.model.aggregates.Publication;
 import com.event.wear.platform.publication.domain.model.commands.*;
 import com.event.wear.platform.publication.domain.model.entities.Comment;
 import com.event.wear.platform.publication.domain.model.entities.Garment;
+import com.event.wear.platform.publication.domain.model.valueobjects.LessorId;
 import com.event.wear.platform.publication.domain.services.PublicationCommandService;
 import com.event.wear.platform.publication.infrastructure.persistence.jpa.repositories.PublicationRepository;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,11 @@ public class PublicationCommandServiceImpl implements PublicationCommandService 
     }
     @Override
     public Publication handle(CreatePublicationCommand command) {
-        if (publicationRepository.existsByGarment(command.garment())) {
+        if (publicationRepository.existsByGarmentTitle(command.title())) {
             throw new IllegalArgumentException("Publication already exists");
         }
-        var garment = new Garment(command.garment().getTitle(), command.garment().getDescription(), command.garment().getSize());
-        var publication = new Publication(command.cost(), command.lessorId(), garment, command.image());
+        var garment = new Garment(command.title(), command.description());
+        var publication = new Publication(command.price(), new LessorId(command.userId()), garment, command.image());
         publicationRepository.save(publication);
         return publication;
     }

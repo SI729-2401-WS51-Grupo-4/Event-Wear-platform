@@ -8,13 +8,11 @@ import com.event.wear.platform.publication.interfaces.rest.resources.CreatePubli
 public class CreatePublicationCommandFromResourceAssembler {
     public static CreatePublicationCommand toCommandFromResource(CreatePublicationResource resource) {
         return new CreatePublicationCommand(
-                resource.cost(),
-                new LessorId(resource.lessorId()),
-                new Garment(
-                        resource.title(),
-                        resource.description(),
-                        resource.size())
-                , resource.image()
+                resource.lessorId(),
+                resource.image(),
+                resource.title(),
+                resource.description(),
+                resource.cost()
         );
     }
 }

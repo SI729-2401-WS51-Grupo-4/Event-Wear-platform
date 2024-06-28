@@ -23,10 +23,10 @@ public class Garment extends AuditableModel {
         this.description = "";
         this.size = "";
     }
-    public Garment(String title, String description, String size) {
+    public Garment(String title, String description) {
         this.title = title;
         this.description = description;
-        this.size = size;
+        this.size = "";
     }
 
     @OneToOne

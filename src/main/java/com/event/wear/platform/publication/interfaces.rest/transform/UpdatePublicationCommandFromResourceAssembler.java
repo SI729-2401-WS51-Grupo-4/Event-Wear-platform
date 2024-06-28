@@ -11,10 +11,7 @@ public class UpdatePublicationCommandFromResourceAssembler {
                 resource.publicationId(),
                 resource.cost(),
                 new LessorId(resource.lessorId()),
-                new Garment(
-                        resource.title(),
-                        resource.description(),
-                        resource.size())
+                new Garment(resource.title(), resource.description())
         );
     }
 }

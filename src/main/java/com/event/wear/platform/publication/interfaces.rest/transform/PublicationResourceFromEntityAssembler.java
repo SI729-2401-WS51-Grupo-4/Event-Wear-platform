@@ -8,7 +8,7 @@ import java.util.Optional;
 public class PublicationResourceFromEntityAssembler {
     public static PublicationResource toResourceFromEntity(Publication entity) {
         return new PublicationResource(
-                entity.getId().intValue(),
+                entity.getId(),
                 entity.getImage(),
                 entity.getGarment().getTitle(),
                 entity.getGarment().getDescription(),
