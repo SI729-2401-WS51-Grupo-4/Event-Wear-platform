@@ -1,6 +1,8 @@
 package com.event.wear.platform.profiles.interfaces.rest;
 
+import ch.qos.logback.classic.Logger;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +32,7 @@ import java.util.stream.Collectors;
 public class ProfilesController {
   private final ProfileQueryService profileQueryService;
   private final ProfileCommandService profileCommandService;
-
+  private static final Logger logger = (Logger) LoggerFactory.getLogger(ProfilesController.class);
   public ProfilesController(ProfileQueryService profileQueryService,
       ProfileCommandService profileCommandService) {
 
@@ -44,18 +46,17 @@ public class ProfilesController {
    * @return the created Profile
    */
   @PostMapping
-  public ResponseEntity<ProfileResource> createProfile(
-      @RequestBody CreateProfileResource resource) {
+  public ResponseEntity<ProfileResource> createProfile(@RequestBody CreateProfileResource resource) {
+    // Log the CreateProfileResource
+    logger.info(resource.toString());
 
-    var createProfileCommand = CreateProfileCommandFromResourceAssembler
-        .toCommandFromResource(resource);
+    var createProfileCommand = CreateProfileCommandFromResourceAssembler.toCommandFromResource(resource);
     var profile = profileCommandService.handle(createProfileCommand);
     if (profile.isEmpty())
       return ResponseEntity.badRequest().build();
     var profileResource = ProfileResourceFromEntityAssembler.toResourceFromEntity(profile.get());
     return new ResponseEntity<>(profileResource, HttpStatus.CREATED);
   }
-
   /**
    * Gets a Profile by its id
    * @param profileId the id of the Profile to get
